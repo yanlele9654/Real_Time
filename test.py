@@ -46,6 +46,7 @@ print(accuracy_score(actuals, predictions))
 print(metrics.roc_auc_score(predictions,actuals))
 
 #%%
+print('just Gold and EXP')
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
 predictions = xgb_model_GoldExp.predict(Xv_GolDExp)
@@ -56,6 +57,7 @@ print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
 print(metrics.roc_auc_score(predictions,actuals))
 #%%
+print('nohero_info')
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
 predictions = xgb_model_NoHero.predict(Xv_NOHero)
@@ -66,6 +68,7 @@ print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
 print(metrics.roc_auc_score(predictions,actuals))
 #%%
+print('just building')
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
 predictions = xgb_model_building.predict(Xv_building)
