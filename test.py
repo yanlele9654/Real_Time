@@ -2,10 +2,10 @@
 import pickle
 import pandas as pd
 #%%
-with open('result.pickle','rb') as load_data:
+with open('C:\\Users\\admin\\Desktop\\result.pickle','rb') as load_data:
     result = pickle.load(load_data)
-with open('record_slice.pickle','rb') as load_data:
-    data = pickle.load(load_data)
+with open('C:\\Users\\admin\\Desktop\\record_slice.pickle','rb') as load_data:
+   data = pickle.load(load_data)
 #%%
 type(data)
 data_df=pd.DataFrame(data)
@@ -43,7 +43,7 @@ actuals = yv
 #metrics.auc(fpr,tpr)
 print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
-print(metrics.roc_auc_score(predictions,yv))
+print(metrics.roc_auc_score(predictions,actuals))
 
 #%%
 from sklearn.metrics import accuracy_score
@@ -54,7 +54,7 @@ actuals = yv_GolDExp
 #metrics.auc(fpr,tpr)
 print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
-print(metrics.roc_auc_score(predictions,yv))
+print(metrics.roc_auc_score(predictions,actuals))
 #%%
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
@@ -64,14 +64,14 @@ actuals = yv_NOHero
 #metrics.auc(fpr,tpr)
 print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
-print(metrics.roc_auc_score(predictions,yv))
+print(metrics.roc_auc_score(predictions,actuals))
 #%%
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
-predictions = xgb_model_GoldExp.predict(Xv_building)
+predictions = xgb_model_building.predict(Xv_building)
 actuals = yv_building
 #fpr,tpr,thresholds = metrics.roc_curve(actuals,predictions,pos_label=2)
 #metrics.auc(fpr,tpr)
 print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
-print(metrics.roc_auc_score(predictions,yv))
+print(metrics.roc_auc_score(predictions,actuals))
