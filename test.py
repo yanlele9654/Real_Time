@@ -2,9 +2,9 @@
 import pickle
 import pandas as pd
 #%%
-with open('result.pickle','rb') as load_data:
+with open('/Users/ziaoyan/Desktop/result.pickle','rb') as load_data:
     result = pickle.load(load_data)
-with open('record_slice.pickle','rb') as load_data:
+with open('/Users/ziaoyan/Desktop/record_slice.pickle','rb') as load_data:
     data = pickle.load(load_data)
 #%%
 type(data)
@@ -44,7 +44,23 @@ actuals = yv
 print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
 print(metrics.roc_auc_score(predictions,yv))
+#%%
+#save model
+pickle.dump(xgb_model, open("xgboost.pickle.dat", "wb"))
+pickle.dump(xgb_model_GoldExp, open("xgboost_GoldExp.pickle.dat", "wb"))
+pickle.dump(xgb_model_building, open("xgboost_Building.pickle.dat", "wb"))
+pickle.dump(xgb_model_NoHero, open("xgboost_NoHero.pickle.dat", "wb"))
 
+
+#%%
+xgb_model_new=pickle.load(open("xgboost.pickle.dat", "rb"))
+predictions = xgb_model_new.predict(Xv)
+actuals = yv
+#fpr,tpr,thresholds = metrics.roc_curve(actuals,predictions,pos_label=2)
+#metrics.auc(fpr,tpr)
+print(accuracy_score(actuals, predictions))
+#print(metrics.auc(fpr,tpr))
+print(metrics.roc_auc_score(predictions,actuals))
 #%%
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
@@ -55,6 +71,7 @@ actuals = yv_GolDExp
 print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
 print(metrics.roc_auc_score(predictions,yv))
+
 #%%
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
@@ -64,14 +81,90 @@ actuals = yv_NOHero
 #metrics.auc(fpr,tpr)
 print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
-print(metrics.roc_auc_score(predictions,yv))
+print(metrics.roc_auc_score(predictions,actuals))
 #%%
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
-predictions = xgb_model_GoldExp.predict(Xv_building)
+predictions = xgb_model_building.predict(Xv_building)
 actuals = yv_building
 #fpr,tpr,thresholds = metrics.roc_curve(actuals,predictions,pos_label=2)
 #metrics.auc(fpr,tpr)
 print(accuracy_score(actuals, predictions))
 #print(metrics.auc(fpr,tpr))
-print(metrics.roc_auc_score(predictions,yv))
+print(metrics.roc_auc_score(predictions,actuals))
+#%%
+test_data=pd.read_csv('/Users/ziaoyan/Desktop/match_slice_new1.csv')
+test_data_init=test_data.groupby(by='match_id').head(1)
+#%%
+test_data=test_data.drop(columns=['match_id','Unnamed: 0'])
+test_data_init=test_data_init.drop(columns=['match_id','Unnamed: 0'])
+
+#%%
+result=test_data[['result']]
+result_init=test_data_init[['result']]
+#%%
+test_data=test_data.drop(columns=['result'])
+test_data_init=test_data_init.drop(columns=['result'])
+
+#%%
+columns_name=Xv.columns.tolist()
+#%%
+test_data.columns=columns_name
+test_data_init.columns=columns_name
+
+#%%
+predictions = xgb_model.predict(test_data)
+actuals = result
+print(accuracy_score(actuals, predictions))
+#%%
+predictions = xgb_model.predict(test_data_init)
+actuals = result_init
+print(accuracy_score(actuals, predictions))
+
+#%%
+predictions_prob=xgb_model.predict_proba(test_data)
+predictions_prob_win=predictions_prob[:,-1]
+from matplotlib import pyplot
+pyplot.hist(predictions_prob_win,bins=30)
+pyplot.show()
+
+#%%
+
+#%%
+test_df_building=test_data.iloc[:,262:292]
+test_df_GOLDEXP=test_data.iloc[:,292:294]
+test_df_NOHero =test_data.iloc[:,262:,]
+#%%
+record_train, record_test, result_train, result_test = train_test_split(test_data,result, test_size=0.2, random_state=10)
+xgb_model_test = xgb.XGBClassifier(objective="binary:logistic", random_state=42)
+xgb_model_test.fit(record_train, result_train)
+#%%
+record_train_Gold, record_test_Gold, result_train_Gold, result_test_Gold = train_test_split(test_df_GOLDEXP,result, test_size=0.2, random_state=10)
+xgb_model_test_Gold = xgb.XGBClassifier(objective="binary:logistic", random_state=42)
+xgb_model_test_Gold.fit(record_train_Gold, result_train_Gold)
+#%%
+predictions = xgb_model_GoldExp.predict(test_df_GOLDEXP)
+actuals = result
+#fpr,tpr,thresholds = metrics.roc_curve(actuals,predictions,pos_label=2)
+#metrics.auc(fpr,tpr)
+print(accuracy_score(actuals, predictions))
+#print(metrics.auc(fpr,tpr))
+print(metrics.roc_auc_score(predictions,actuals))
+#%%
+
+predictions = xgb_model_NoHero.predict(Xv_NOHero)
+actuals = yv_NOHero
+#fpr,tpr,thresholds = metrics.roc_curve(actuals,predictions,pos_label=2)
+#metrics.auc(fpr,tpr)
+print(accuracy_score(actuals, predictions))
+#print(metrics.auc(fpr,tpr))
+print(metrics.roc_auc_score(predictions,actuals))
+#%%
+
+predictions = xgb_model_building.predict(Xv_building)
+actuals = yv_building
+#fpr,tpr,thresholds = metrics.roc_curve(actuals,predictions,pos_label=2)
+#metrics.auc(fpr,tpr)
+print(accuracy_score(actuals, predictions))
+#print(metrics.auc(fpr,tpr))
+print(metrics.roc_auc_score(predictions,actuals))
