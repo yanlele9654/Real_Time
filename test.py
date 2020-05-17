@@ -2,9 +2,9 @@
 import pickle
 import pandas as pd
 #%%
-with open('result.pickle','rb') as load_data:
+with open('/Users/ziaoyan/PycharmProjects/比赛记录切片/result.pickle','rb') as load_data:
     result = pickle.load(load_data)
-with open('record_slice.pickle','rb') as load_data:
+with open('/Users/ziaoyan/PycharmProjects/比赛记录切片/record_slice.pickle','rb') as load_data:
     data = pickle.load(load_data)
 #%%
 type(data)
